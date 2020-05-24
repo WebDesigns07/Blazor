@@ -20,7 +20,7 @@
                 <div class="p-3">
                     @if (Games != null)
                     {
-                        <DxDataGrid Data="@Games.FirstOrDefault().Home.Players"
+                        <DxDataGrid Data="@Players"
                                     SelectionMode="DataGridSelectionMode.None"
                                     ShowFilterRow="false">
                             <DxDataGridSpinEditColumn Field="@nameof(Player.Name)" />
@@ -49,9 +49,11 @@
 @code {
     private IList<Game> Games;
     private DxDataGrid<Game> grid;
+    private IList<Player> Players;
 
     protected async override Task OnInitializedAsync()
     {
         Games = await HttpClient.GetFromJsonAsync<List<Game>>("api/sports");
+        Players = Games[0].Home.Players;
     }
 }
