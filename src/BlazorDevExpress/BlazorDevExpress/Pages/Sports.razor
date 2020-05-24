@@ -1,0 +1,59 @@
+﻿@page "/Sports"
+@inject HttpClient HttpClient;
+
+<DxDataGrid @ref="@grid"
+            Data="@Games"
+            AutoCollapseDetailRow="true" 
+            ShowFilterRow="false"
+            SelectionMode="DataGridSelectionMode.None" 
+            ShowDetailRow="true">
+    <Columns>
+        <DxDataGridColumn Field="@nameof(Game.Home)" Caption="Home" />
+        <DxDataGridColumn Field="@nameof(Game.Away)" />
+        <DxDataGridColumn Field="@nameof(Game.Judge)" />
+        <DxDataGridColumn Field="@nameof(Game.Time)" />
+        <DxDataGridColumn Field="@nameof(Game.Weather)" />
+    </Columns>
+    <DetailRowTemplate>
+        <DxTabs>
+            <DxTabPage Text="Sports">
+                <div class="p-3">
+                    @if (Games != null)
+                    {
+                        <DxDataGrid Data="@Players"
+                                    SelectionMode="DataGridSelectionMode.None"
+                                    ShowFilterRow="false">
+                            <DxDataGridSpinEditColumn Field="@nameof(Player.Name)" />
+                            <DxDataGridSpinEditColumn Field="@nameof(Player.Score)" />
+                            <DxDataGridSpinEditColumn Field="@nameof(Player.Assist)" />
+                            <DxDataGridSpinEditColumn Field="@nameof(Player.Age)" />
+                            <DxDataGridSpinEditColumn Field="@nameof(Player.Value)" />
+                        </DxDataGrid>
+                    }
+                    else
+                    {
+                        <em>Loading games</em>
+                    }
+                </div>
+            </DxTabPage>
+            <DxTabPage Text="Agenda">
+
+            </DxTabPage>
+            <DxTabPage Text="Database">
+
+            </DxTabPage>
+        </DxTabs>
+    </DetailRowTemplate>
+</DxDataGrid>
+
+@code {
+    private IList<Game> Games;
+    private DxDataGrid<Game> grid;
+    private IList<Player> Players;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Games = await HttpClient.GetFromJsonAsync<List<Game>>("api/sports");
+        Players = Games[0].Home.Players;
+    }
+}

@@ -55,6 +55,7 @@ namespace BlazorDevExpress.Server
                 endpoints.MapRazorPages();
                 endpoints.MapFallbackToFile("index.html");
             });
+
         }
     }
 }
